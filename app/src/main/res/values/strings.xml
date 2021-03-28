@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">C25k</string>
+    <string name="action_settings">Settings</string>
+    <string name="home_fragment_label">Home</string>
+    <string name="chronometer_fragment_label">Chronometer</string>
+
+    <!-- Home Fragment -->
+    <string name="there_is_no_workout">There is no workouts.</string>
+    <string name="new_button">New</string>
+    <string name="status_finished">Workout Status Finished</string>
+
+    <!-- Chronometer Fragment -->
+    <string name="start">Start</string>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="sets">Sets</string>
+    <string name="run">Run</string>
+    <string name="walk">Walk</string>
+    <string name="finished">Finished!</string>
+    <string name="warm_up">Warm Up</string>
+    <string name="time">Time</string>
+</resources>

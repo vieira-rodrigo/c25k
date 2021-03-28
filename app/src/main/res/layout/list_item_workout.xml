@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:paddingTop="@dimen/workout_item_padding"
+    android:paddingBottom="@dimen/workout_item_padding">
+
+    <ImageView
+        android:id="@+id/image_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/status_finished" />
+
+    <TextView
+        android:id="@+id/text_view_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/workout_date_marginStart"
+        android:textSize="@dimen/workout_text_size" />
+
+    <TextView
+        android:id="@+id/text_view_training"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/workout_item_text_marginStart"
+        android:textSize="@dimen/workout_text_size" />
+
+    <TextView
+        android:id="@+id/text_view_sets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/workout_item_text_marginStart"
+        android:textSize="@dimen/workout_text_size" />
+
+    <TextView
+        android:id="@+id/text_view_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/workout_item_text_marginStart"
+        android:textSize="@dimen/workout_text_size" />
+</LinearLayout>
