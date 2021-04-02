@@ -22,4 +22,7 @@
     <string name="confirm_cancel">Are you sure you want to cancel?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <string name="seconds">Seconds</string>
+    <string name="minutes">Minutes</string>
 </resources>

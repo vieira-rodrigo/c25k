@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.rev.c25k.R;
-import com.rev.c25k.model.T5KWeeks;
 import com.rev.c25k.model.Workout;
 import com.rev.c25k.model.WorkoutDAO;
 
@@ -55,10 +54,8 @@ public class HomeFragment extends Fragment {
 
     private void initNewButton(@NonNull View view) {
         view.findViewById(R.id.button_new).setOnClickListener(view1 -> {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("week", T5KWeeks.WTESTE);
             NavHostFragment.findNavController(HomeFragment.this)
-                    .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
+                    .navigate(R.id.action_HomeFragment_to_SelectFragment);
         });
     }
 }

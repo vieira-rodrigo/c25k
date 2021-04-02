@@ -1,7 +1,6 @@
 package com.rev.c25k.model;
 
 public enum T5KWeeks {
-    WTESTE("Week Test", 20, 5, 2),
     W1("Week 1", 30, 120, 8),
     W2("Week 2", 30, 60, 15),
     W3("Week 3", 60, 60, 12),

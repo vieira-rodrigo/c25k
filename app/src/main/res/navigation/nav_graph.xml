@@ -12,7 +12,16 @@
         tools:layout="@layout/fragment_home">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            android:id="@+id/action_HomeFragment_to_SelectFragment"
+            app:destination="@id/SelectFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SelectFragment"
+        android:name="com.rev.c25k.view.SelectWeekFragment"
+        tools:layout="@layout/fragment_select_week">
+
+        <action
+            android:id="@+id/action_SelectFragment_to_ChronometerFragment"
             app:destination="@id/ChronometerFragment" />
     </fragment>
     <fragment
@@ -22,7 +31,7 @@
         tools:layout="@layout/fragment_chronometer">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_Chronometer_to_HomeFragment"
             app:destination="@id/HomeFragment" />
     </fragment>
 </navigation>

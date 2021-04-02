@@ -11,4 +11,8 @@
     <dimen name="workout_text_size">18sp</dimen>
     <dimen name="workout_item_padding">10dp</dimen>
     <dimen name="time_text_size">50sp</dimen>
+    <dimen name="week_item_padding">10dp</dimen>
+    <dimen name="tv_week_size">25sp</dimen>
+    <dimen name="tv_week_item_size">15sp</dimen>
+    <dimen name="tv_week_item_margin_end">10dp</dimen>
 </resources>

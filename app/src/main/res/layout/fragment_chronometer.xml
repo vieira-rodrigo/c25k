@@ -10,11 +10,23 @@
         android:id="@+id/text_view_week"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Week 2"
         android:textSize="@dimen/week_text_size"
-        app:layout_constraintBottom_toTopOf="@id/text_view_sets"
+        app:layout_constraintBottom_toTopOf="@id/text_view_week_info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_week_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/tv_week_item_margin_end"
+        android:textSize="@dimen/tv_week_item_size"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_sets"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_week" />
 
     <TextView
         android:id="@+id/text_view_sets"
@@ -24,7 +36,7 @@
         app:layout_constraintBottom_toTopOf="@+id/text_view_action"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_week" />
+        app:layout_constraintTop_toBottomOf="@id/text_view_week_info" />
 
     <TextView
         android:id="@+id/text_view_action"
@@ -45,7 +57,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_sets"  />
+        app:layout_constraintTop_toBottomOf="@id/text_view_sets" />
 
     <Chronometer
         android:id="@+id/chronometer"

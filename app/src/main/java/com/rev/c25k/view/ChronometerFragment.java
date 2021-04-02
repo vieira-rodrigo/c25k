@@ -2,6 +2,7 @@ package com.rev.c25k.view;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import java.time.Instant;
 import java.util.Calendar;
 
 import static androidx.navigation.fragment.NavHostFragment.findNavController;
+import static com.rev.c25k.view.Utils.formatTimeText;
 import static java.lang.String.format;
 
 public class ChronometerFragment extends Fragment {
@@ -93,6 +95,14 @@ public class ChronometerFragment extends Fragment {
         mWeek = (T5KWeeks) arguments.getSerializable("week");
 
         ((TextView) view.findViewById(R.id.text_view_week)).setText(mWeek.getLabel());
+
+        Context context = requireContext();
+        String runInfo = String.format("%s %s", context.getString(R.string.run),
+                formatTimeText(mWeek.getSecondsToRun(), context));
+        String walkInfo = String.format("%s %s", context.getString(R.string.walk),
+                formatTimeText(mWeek.getSecondsToWalk(), context));
+        String weekInfo = String.format("%s %s", runInfo, walkInfo);
+        ((TextView) view.findViewById(R.id.text_view_week_info)).setText(weekInfo);
     }
 
     private void initStartButton(View view) {
@@ -112,7 +122,7 @@ public class ChronometerFragment extends Fragment {
 
     private void backHome() {
         findNavController(ChronometerFragment.this)
-                .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                .navigate(R.id.action_Chronometer_to_HomeFragment);
     }
 
     private void initChronometer(View view) {
@@ -255,7 +265,7 @@ public class ChronometerFragment extends Fragment {
     }
 
     public void onBackPressed() {
-        if (mStatus == null) {
+        if (mStatus == null && mCurrentSet > 0) {
             cancel();
         } else {
             backHome();

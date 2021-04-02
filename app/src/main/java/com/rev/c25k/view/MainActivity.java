@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
         if (currentFragment instanceof ChronometerFragment) {
             ((ChronometerFragment) currentFragment).onBackPressed();
+        } else if (currentFragment instanceof HomeFragment) {
+            finish();
         } else {
             super.onBackPressed();
         }

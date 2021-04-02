@@ -63,6 +63,12 @@ public class WorkoutDAO {
         return mountWorkouts(cursor);
     }
 
+    public void delete(long id) {
+        String selection = Workout._ID + " = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+        db.delete(Workout.TABLE_NAME, selection, selectionArgs);
+    }
+
     private List<Workout> mountWorkouts(Cursor cursor) {
         List<Workout> workouts = new ArrayList<>();
 
