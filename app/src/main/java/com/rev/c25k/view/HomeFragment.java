@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
     private void initNewButton(@NonNull View view) {
         view.findViewById(R.id.button_new).setOnClickListener(view1 -> {
             Bundle bundle = new Bundle();
-            bundle.putSerializable("week", T5KWeeks.W7);
+            bundle.putSerializable("week", T5KWeeks.WTESTE);
             NavHostFragment.findNavController(HomeFragment.this)
                     .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
         });

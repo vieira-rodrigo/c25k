@@ -6,6 +6,8 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.rev.c25k.R;
 
@@ -34,5 +36,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+
+        if (navHostFragment == null) {
+            super.onBackPressed();
+        }
+
+        Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+        if (currentFragment instanceof ChronometerFragment) {
+            ((ChronometerFragment) currentFragment).onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -49,6 +49,7 @@ public class ChronometerFragment extends Fragment {
     private TextView mTvTime;
     private TextView mTvSets;
     private Instant startTime;
+    private Status mStatus;
 
     @Override
     public View onCreateView(
@@ -106,8 +107,12 @@ public class ChronometerFragment extends Fragment {
 
     private void initBackButton(@NonNull View view) {
         mBackButton = view.findViewById(R.id.button_back);
-        mBackButton.setOnClickListener(view1 -> findNavController(ChronometerFragment.this)
-                .navigate(R.id.action_SecondFragment_to_FirstFragment));
+        mBackButton.setOnClickListener(view1 -> backHome());
+    }
+
+    private void backHome() {
+        findNavController(ChronometerFragment.this)
+                .navigate(R.id.action_SecondFragment_to_FirstFragment);
     }
 
     private void initChronometer(View view) {
@@ -226,9 +231,9 @@ public class ChronometerFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         String date = df.format(cal.getTime());
         String sets = (String) mTvSets.getText();
-        Status status = mCurrentSet > mWeek.getSets() ? Status.FINISHED : Status.CANCELLED;
+        mStatus = mCurrentSet > mWeek.getSets() ? Status.FINISHED : Status.CANCELLED;
         Workout workout = new Workout(null, Training.T5K, date, mWeek,
-                sets, status, time);
+                sets, mStatus, time);
         new WorkoutDAO(requireContext()).save(workout);
     }
 
@@ -247,5 +252,13 @@ public class ChronometerFragment extends Fragment {
                 .setNegativeButton(R.string.no, (dialog, which) -> mChronometer.start())
                 .create()
                 .show();
+    }
+
+    public void onBackPressed() {
+        if (mStatus == null) {
+            cancel();
+        } else {
+            backHome();
+        }
     }
 }
