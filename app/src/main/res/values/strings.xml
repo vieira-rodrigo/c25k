@@ -19,4 +19,7 @@
     <string name="finished">Finished!</string>
     <string name="warm_up">Warm Up</string>
     <string name="time">Time</string>
+    <string name="confirm_cancel">Are you sure you want to cancel?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

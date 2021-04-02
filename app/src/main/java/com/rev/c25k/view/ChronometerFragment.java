@@ -1,6 +1,7 @@
 package com.rev.c25k.view;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -239,5 +240,12 @@ public class ChronometerFragment extends Fragment {
 
     private void cancel() {
         mChronometer.stop();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setMessage(R.string.confirm_cancel)
+                .setPositiveButton(R.string.yes, (dialog, which) -> finish())
+                .setNegativeButton(R.string.no, (dialog, which) -> mChronometer.start())
+                .create()
+                .show();
     }
 }
