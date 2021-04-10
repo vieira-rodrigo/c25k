@@ -13,7 +13,6 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -139,11 +138,14 @@ public class ChronometerFragment extends Fragment {
     }
 
     private void handleActionFinished(Chronometer chronometer) {
+
         switch (mCurrentAction) {
             case ACTION_WARM_UP:
-                mCurrentAction = ACTION_RUN;
-                break;
             case ACTION_WALK:
+                if (mCurrentSet == mWeek.getSets()) {
+                    finish(true);
+                    return;
+                }
                 mCurrentSet++;
                 mCurrentAction = ACTION_RUN;
                 break;
@@ -151,17 +153,12 @@ public class ChronometerFragment extends Fragment {
                 mCurrentAction = ACTION_WALK;
         }
 
-        if (mCurrentSet > mWeek.getSets()) {
-            finish();
-            return;
-        }
-
         updateChronometer(chronometer);
     }
 
     private void updateChronometer(Chronometer chronometer) {
         mTvSets = requireView().findViewById(R.id.text_view_sets);
-        mTvSets.setText(format("%s %s/%s", getString(R.string.sets), mCurrentSet, mWeek.getSets()));
+        mTvSets.setText(format("%s %s/%s", getString(R.string.current_sets), mCurrentSet, mWeek.getSets()));
         chronometer.setBase(SystemClock.elapsedRealtime() + getBase());
         chronometer.start();
         updateAction(getActionRes(), true);
@@ -170,7 +167,7 @@ public class ChronometerFragment extends Fragment {
     private long getBase() {
         switch (mCurrentAction) {
             case ACTION_WARM_UP:
-                long mWarmUpTime = 180; //TODO get time from settings
+                long mWarmUpTime = 5;//180; //TODO get time from settings
                 return mWarmUpTime * 1000;
             case ACTION_WALK:
                 return mWeek.getSecondsToWalk() * 1000;
@@ -212,15 +209,16 @@ public class ChronometerFragment extends Fragment {
     }
 
     private void start() {
-        mCurrentSet = 1;
         startTime = Instant.now();
         updateChronometer(mChronometer);
         showOnlyCancelButton();
     }
 
-    private void finish() {
-        Toast.makeText(requireContext(), "ACABOOOOU!!!", Toast.LENGTH_SHORT).show();
-        updateAction(R.string.finished, false);
+    private void finish(boolean finished) {
+        mStatus = finished ? Status.FINISHED : Status.CANCELLED;
+        int status = mStatus.equals(Status.FINISHED) ? R.string.status_finished
+                : R.string.status_cancelled;
+        updateAction(status, false);
         handleResult();
         showOnlyBackButton();
     }
@@ -240,8 +238,7 @@ public class ChronometerFragment extends Fragment {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Calendar cal = Calendar.getInstance();
         String date = df.format(cal.getTime());
-        String sets = (String) mTvSets.getText();
-        mStatus = mCurrentSet > mWeek.getSets() ? Status.FINISHED : Status.CANCELLED;
+        String sets = format("%s/%s", mCurrentSet, mWeek.getSets());
         Workout workout = new Workout(null, Training.T5K, date, mWeek,
                 sets, mStatus, time);
         new WorkoutDAO(requireContext()).save(workout);
@@ -258,14 +255,14 @@ public class ChronometerFragment extends Fragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage(R.string.confirm_cancel)
-                .setPositiveButton(R.string.yes, (dialog, which) -> finish())
+                .setPositiveButton(R.string.yes, (dialog, which) -> finish(false))
                 .setNegativeButton(R.string.no, (dialog, which) -> mChronometer.start())
                 .create()
                 .show();
     }
 
     public void onBackPressed() {
-        if (mStatus == null && mCurrentSet > 0) {
+        if (startTime != null && mStatus == null) {
             cancel();
         } else {
             backHome();

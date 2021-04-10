@@ -1,44 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:paddingTop="@dimen/workout_item_padding"
-    android:paddingBottom="@dimen/workout_item_padding">
+    android:padding="@dimen/workout_item_padding">
 
-    <ImageView
-        android:id="@+id/image_status"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/status_finished" />
+        android:background="@drawable/card"
+        android:gravity="center_vertical"
+        tools:ignore="UselessParent">
 
-    <TextView
-        android:id="@+id/text_view_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/workout_date_marginStart"
-        android:textSize="@dimen/workout_text_size" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/workout_item_margin"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_view_training"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:layout_marginStart="@dimen/workout_item_text_marginStart"
-        android:textSize="@dimen/workout_text_size" />
+            <ImageView
+                android:id="@+id/image_status"
+                android:layout_width="@dimen/workout_status_icon_size"
+                android:layout_height="@dimen/workout_status_icon_size"
+                android:contentDescription="@string/status_finished" />
 
-    <TextView
-        android:id="@+id/text_view_sets"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/workout_item_text_marginStart"
-        android:textSize="@dimen/workout_text_size" />
+            <TextView
+                android:id="@+id/text_view_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/workout_label_size" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/text_view_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:layout_marginStart="@dimen/workout_item_text_marginStart"
-        android:textSize="@dimen/workout_text_size" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/workout_item_layout_height"
+            android:layout_margin="@dimen/workout_item_margin"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date"
+                    android:textSize="@dimen/workout_label_size" />
+
+                <TextView
+                    android:id="@+id/text_view_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/workout_text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/training"
+                    android:textSize="@dimen/workout_label_size" />
+
+
+                <TextView
+                    android:id="@+id/text_view_training"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/workout_text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/workout_item_layout_height"
+            android:layout_margin="@dimen/workout_item_margin"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sets"
+                    android:textSize="@dimen/workout_label_size" />
+
+                <TextView
+                    android:id="@+id/text_view_sets"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/workout_text_size"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time"
+                        android:textSize="@dimen/workout_label_size" />
+
+                    <TextView
+                        android:id="@+id/text_view_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/workout_text_size"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+
+            <ImageButton
+                android:id="@+id/button_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/workout_item_margin"
+                android:contentDescription="@string/delete"
+                android:src="@drawable/ic_delete" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

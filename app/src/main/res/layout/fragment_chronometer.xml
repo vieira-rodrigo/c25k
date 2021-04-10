@@ -6,100 +6,92 @@
     android:layout_height="match_parent"
     tools:context=".view.ChronometerFragment">
 
-    <TextView
-        android:id="@+id/text_view_week"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layout_info"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Week 2"
-        android:textSize="@dimen/week_text_size"
-        app:layout_constraintBottom_toTopOf="@id/text_view_week_info"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/layout_time">
 
-    <TextView
-        android:id="@+id/text_view_week_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/tv_week_item_margin_end"
-        android:textSize="@dimen/tv_week_item_size"
-        app:layout_constraintBottom_toTopOf="@+id/text_view_sets"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_week" />
+        <TextView
+            android:id="@+id/text_view_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/week_text_size" />
 
-    <TextView
-        android:id="@+id/text_view_sets"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/sets_text_size"
-        app:layout_constraintBottom_toTopOf="@+id/text_view_action"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_week_info" />
+        <TextView
+            android:id="@+id/text_view_week_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/tv_week_item_margin_end"
+            android:textSize="@dimen/tv_week_item_size" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/text_view_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/action_text_size"
-        app:layout_constraintBottom_toTopOf="@+id/chronometer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_sets" />
+    <LinearLayout
+        android:id="@+id/layout_time"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_time_height"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/layout_info">
 
-    <TextView
-        android:id="@+id/text_view_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/time_text_size"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/button_back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_sets" />
+        <TextView
+            android:id="@+id/text_view_sets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sets_text_size" />
 
-    <Chronometer
-        android:id="@+id/chronometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:countDown="true"
-        android:textSize="@dimen/chronometer_text_size"
-        app:layout_constraintBottom_toTopOf="@+id/button_start_chronometer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_sets" />
 
-    <Button
-        android:id="@+id/button_start_chronometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/circle_button"
-        android:text="@string/start"
-        app:layout_constraintBottom_toTopOf="@+id/button_cancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chronometer" />
+        <TextView
+            android:id="@+id/text_view_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/time_text_size"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
-    <Button
-        android:id="@+id/button_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/circle_button"
-        android:text="@string/cancel"
-        app:layout_constraintBottom_toTopOf="@+id/button_back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_start_chronometer" />
+        <Chronometer
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:countDown="true"
+            android:textSize="@dimen/chronometer_text_size" />
 
-    <Button
-        android:id="@+id/button_back"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/text_view_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/action_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_buttons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/circle_button"
-        android:text="@string/back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_cancel" />
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/layout_time">
+
+        <Button
+            android:id="@+id/button_start_chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_button"
+            android:text="@string/start" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_button"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_button"
+            android:text="@string/back" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

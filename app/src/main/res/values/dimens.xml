@@ -6,13 +6,17 @@
     <dimen name="action_text_size">25sp</dimen>
     <dimen name="circle_size">100dip</dimen>
     <dimen name="workouts_list_height">350dp</dimen>
-    <dimen name="workout_item_text_marginStart">5dp</dimen>
-    <dimen name="workout_date_marginStart">10dp</dimen>
-    <dimen name="workout_text_size">18sp</dimen>
+    <dimen name="workout_text_size">15sp</dimen>
     <dimen name="workout_item_padding">10dp</dimen>
     <dimen name="time_text_size">50sp</dimen>
     <dimen name="week_item_padding">10dp</dimen>
     <dimen name="tv_week_size">25sp</dimen>
     <dimen name="tv_week_item_size">15sp</dimen>
     <dimen name="tv_week_item_margin_end">10dp</dimen>
+    <dimen name="layout_time_height">350dp</dimen>
+    <dimen name="card_radius">10dp</dimen>
+    <dimen name="workout_label_size">12sp</dimen>
+    <dimen name="workout_item_layout_height">90dp</dimen>
+    <dimen name="workout_item_margin">5dp</dimen>
+    <dimen name="workout_status_icon_size">50dp</dimen>
 </resources>

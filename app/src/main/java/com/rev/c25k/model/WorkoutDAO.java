@@ -63,9 +63,9 @@ public class WorkoutDAO {
         return mountWorkouts(cursor);
     }
 
-    public void delete(long id) {
+    public void delete(Workout workout) {
         String selection = Workout._ID + " = ?";
-        String[] selectionArgs = {String.valueOf(id)};
+        String[] selectionArgs = {String.valueOf(workout.getId())};
         db.delete(Workout.TABLE_NAME, selection, selectionArgs);
     }
 

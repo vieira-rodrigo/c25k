@@ -1,5 +1,6 @@
 package com.rev.c25k.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.rev.c25k.R;
 import com.rev.c25k.model.Status;
 import com.rev.c25k.model.Workout;
+import com.rev.c25k.model.WorkoutDAO;
 
 import java.util.List;
 
@@ -54,18 +56,40 @@ public class WorkoutAdapter extends BaseAdapter {
         loadTraining(view, workout);
         loadSets(view, workout.getSets());
         loadTime(view, workout.getTime());
+        configDelete(view, workout);
+    }
+
+    private void configDelete(View view, Workout workout) {
+        view.findViewById(R.id.button_delete).setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setMessage(R.string.confirm_delete)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> delete(workout))
+                    .setNegativeButton(R.string.no, null)
+                    .create()
+                    .show();
+        });
+    }
+
+    private void delete(Workout workout) {
+        new WorkoutDAO(mContext).delete(workout);
+        mList.remove(workout);
+        notifyDataSetChanged();
     }
 
     private void loadData(View view, String date) {
-        date = date.substring(0, 5);
         ((TextView) view.findViewById(R.id.text_view_date)).setText(date);
     }
 
     private void loadStatus(View view, Status status) {
-        int statusDrawable = status.equals(Status.FINISHED) ?
-                R.drawable.ic_status_finished : R.drawable.ic_status_cancelled;
+        int statusDrawable = R.drawable.ic_status_cancelled;
+        int statusText = R.string.status_cancelled;
+        if (status.equals(Status.FINISHED)) {
+            statusDrawable = R.drawable.ic_status_finished;
+            statusText = R.string.status_finished;
+        }
 
         view.findViewById(R.id.image_status).setBackgroundResource(statusDrawable);
+        ((TextView) view.findViewById(R.id.text_view_status)).setText(statusText);
     }
 
     private void loadTraining(View view, Workout workout) {

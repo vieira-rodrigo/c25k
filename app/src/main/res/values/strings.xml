@@ -7,7 +7,12 @@
     <!-- Home Fragment -->
     <string name="there_is_no_workout">There is no workouts.</string>
     <string name="new_button">New</string>
-    <string name="status_finished">Workout Status Finished</string>
+    <string name="status_finished">Finished</string>
+    <string name="delete">Delete</string>
+    <string name="status_cancelled">Cancelled</string>
+    <string name="date">Date</string>
+    <string name="training">Training</string>
+    <string name="confirm_delete">Are you sure you want delete this register?</string>
 
     <!-- Chronometer Fragment -->
     <string name="start">Start</string>
@@ -22,6 +27,7 @@
     <string name="confirm_cancel">Are you sure you want to cancel?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="current_sets">Current Set</string>
 
     <string name="seconds">Seconds</string>
     <string name="minutes">Minutes</string>

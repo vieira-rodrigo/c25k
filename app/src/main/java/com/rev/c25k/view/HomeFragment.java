@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment {
         TextView tvNoWorkouts = view.findViewById(R.id.text_view_no_workouts);
 
         List<Workout> workouts = new WorkoutDAO(context).getAll();
-        if(workouts.isEmpty()){
+        if (workouts.isEmpty()) {
             listView.setVisibility(View.GONE);
             tvNoWorkouts.setVisibility(View.VISIBLE);
             return;
@@ -48,8 +48,8 @@ public class HomeFragment extends Fragment {
 
         listView.setVisibility(View.VISIBLE);
         tvNoWorkouts.setVisibility(View.GONE);
-        WorkoutAdapter adapter = new WorkoutAdapter(workouts, context);
-        listView.setAdapter(adapter);
+        WorkoutAdapter workoutAdapter = new WorkoutAdapter(workouts, context);
+        listView.setAdapter(workoutAdapter);
     }
 
     private void initNewButton(@NonNull View view) {
