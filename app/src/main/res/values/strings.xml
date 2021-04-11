@@ -31,4 +31,10 @@
 
     <string name="seconds">Seconds</string>
     <string name="minutes">Minutes</string>
+
+    <!-- Settings Fragment -->
+    <string name="warm_up_time">Warm Up Time (min):</string>
+    <string name="settings_fragment_label">Settings Fragment</string>
+    <string name="save">Save</string>
+    <string name="settings_saved">Settings Saved!</string>
 </resources>

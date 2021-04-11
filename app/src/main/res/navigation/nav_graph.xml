@@ -34,4 +34,9 @@
             android:id="@+id/action_Chronometer_to_HomeFragment"
             app:destination="@id/HomeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="com.rev.c25k.view.SettingsFragment"
+        android:label="@string/settings_fragment_label"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

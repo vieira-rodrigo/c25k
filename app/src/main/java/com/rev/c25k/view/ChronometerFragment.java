@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.rev.c25k.R;
+import com.rev.c25k.model.Settings;
 import com.rev.c25k.model.Status;
 import com.rev.c25k.model.T5KWeeks;
 import com.rev.c25k.model.Training;
@@ -167,8 +168,8 @@ public class ChronometerFragment extends Fragment {
     private long getBase() {
         switch (mCurrentAction) {
             case ACTION_WARM_UP:
-                long mWarmUpTime = 5;//180; //TODO get time from settings
-                return mWarmUpTime * 1000;
+                int mWarmUpTime = Integer.parseInt(Settings.getWarmUpTime(requireContext()));
+                return mWarmUpTime * 60 * 1000;
             case ACTION_WALK:
                 return mWeek.getSecondsToWalk() * 1000;
             default:

@@ -1,6 +1,8 @@
 package com.rev.c25k.view;
 
+import android.app.PendingIntent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -8,6 +10,7 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDeepLinkBuilder;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.rev.c25k.R;
@@ -34,10 +37,24 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            openSettingsFragment();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openSettingsFragment() {
+        PendingIntent pendingIntent = new NavDeepLinkBuilder(this.getApplicationContext())
+                .setGraph(R.navigation.nav_graph)
+                .setDestination(R.id.SettingsFragment)
+                .createPendingIntent();
+
+        try {
+            pendingIntent.send();
+        } catch (PendingIntent.CanceledException e) {
+            Log.e(String.valueOf(this.getClass()), e.toString());
+        }
     }
 
     @Override
@@ -47,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (navHostFragment == null) {
             super.onBackPressed();
+            return;
         }
 
         Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);

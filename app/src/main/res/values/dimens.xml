@@ -19,4 +19,7 @@
     <dimen name="workout_item_layout_height">90dp</dimen>
     <dimen name="workout_item_margin">5dp</dimen>
     <dimen name="workout_status_icon_size">50dp</dimen>
+    <dimen name="warm_up_text_size">20sp</dimen>
+    <dimen name="settings_padding">10dp</dimen>
+    <dimen name="warm_up_edit_text_marginStart">10dp</dimen>
 </resources>
