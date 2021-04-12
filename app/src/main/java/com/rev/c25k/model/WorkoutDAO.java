@@ -26,6 +26,7 @@ public class WorkoutDAO {
         values.put(Workout.COLUMN_NAME_SETS, workout.getSets());
         values.put(Workout.COLUMN_NAME_STATUS, workout.getStatus().toString());
         values.put(Workout.COLUMN_NAME_TIME, workout.getTime());
+        values.put(Workout.COLUMN_NAME_DISTANCE, workout.getDistance());
 
         if (workout.getId() == null) {
             long rowID = db.insert(Workout.TABLE_NAME, null, values);
@@ -45,7 +46,8 @@ public class WorkoutDAO {
                 Workout.COLUMN_NAME_WEEK,
                 Workout.COLUMN_NAME_SETS,
                 Workout.COLUMN_NAME_STATUS,
-                Workout.COLUMN_NAME_TIME
+                Workout.COLUMN_NAME_TIME,
+                Workout.COLUMN_NAME_DISTANCE
         };
 
         String sortOrder = Workout._ID + " DESC";
@@ -80,6 +82,7 @@ public class WorkoutDAO {
             int setsIndex = cursor.getColumnIndexOrThrow(Workout.COLUMN_NAME_SETS);
             int statusIndex = cursor.getColumnIndexOrThrow(Workout.COLUMN_NAME_STATUS);
             int timeIndex = cursor.getColumnIndexOrThrow(Workout.COLUMN_NAME_TIME);
+            int distanceIndex = cursor.getColumnIndexOrThrow(Workout.COLUMN_NAME_DISTANCE);
 
             Long id = cursor.getLong(idIndex);
             Training training = Training.valueOf(cursor.getString(trainingIndex));
@@ -88,8 +91,9 @@ public class WorkoutDAO {
             String sets = cursor.getString(setsIndex);
             Status status = Status.valueOf(cursor.getString(statusIndex));
             String time = cursor.getString(timeIndex);
+            String distance = cursor.getString(distanceIndex);
 
-            workouts.add(new Workout(id, training, date, week, sets, status, time));
+            workouts.add(new Workout(id, training, date, week, sets, status, time, distance));
         }
 
         return workouts;

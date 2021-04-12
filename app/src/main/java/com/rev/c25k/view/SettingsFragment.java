@@ -47,7 +47,14 @@ public class SettingsFragment extends Fragment {
     private void save() {
         Context context = requireContext();
         EditText warmUpText = requireView().findViewById(R.id.edit_text_warm_up);
-        Settings.saveWarmUpTime(warmUpText.getText().toString(), context);
+        String warmUpTime = warmUpText.getText().toString();
+
+        if (warmUpTime == null || warmUpTime.isEmpty()) {
+            warmUpTime = "0";
+            warmUpText.setText(warmUpTime);
+        }
+
+        Settings.saveWarmUpTime(warmUpTime, context);
         Toast.makeText(context, R.string.settings_saved, Toast.LENGTH_SHORT).show();
     }
 }

@@ -12,6 +12,7 @@
     <string name="status_cancelled">Cancelled</string>
     <string name="date">Date</string>
     <string name="training">Training</string>
+    <string name="status">Status</string>
     <string name="confirm_delete">Are you sure you want delete this register?</string>
 
     <!-- Chronometer Fragment -->
@@ -24,13 +25,14 @@
     <string name="finished">Finished!</string>
     <string name="warm_up">Warm Up</string>
     <string name="time">Time</string>
+    <string name="distance">Distance</string>
     <string name="confirm_cancel">Are you sure you want to cancel?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="current_sets">Current Set</string>
 
-    <string name="seconds">Seconds</string>
-    <string name="minutes">Minutes</string>
+    <string name="seconds">Sec</string>
+    <string name="minutes">Min</string>
 
     <!-- Settings Fragment -->
     <string name="warm_up_time">Warm Up Time (min):</string>

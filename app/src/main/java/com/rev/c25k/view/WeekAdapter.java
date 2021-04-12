@@ -13,7 +13,8 @@ import com.rev.c25k.model.T5KWeeks;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.rev.c25k.view.Utils.formatTimeText;
+import static com.rev.c25k.view.Utils.getRunInfo;
+import static com.rev.c25k.view.Utils.getWalkInfo;
 
 public class WeekAdapter extends BaseAdapter {
     private List<T5KWeeks> mWeeks = Arrays.asList(T5KWeeks.values());
@@ -31,14 +32,10 @@ public class WeekAdapter extends BaseAdapter {
         }
 
         T5KWeeks week = mWeeks.get(position);
-        String run = String.format("%s %s", mContext.getString(R.string.run),
-                formatTimeText(week.getSecondsToRun(), mContext));
-        String walk = String.format("%s %s", mContext.getString(R.string.walk),
-                formatTimeText(week.getSecondsToWalk(), mContext));
         String sets = String.format("%s %s", week.getSets(), mContext.getString(R.string.sets));
         ((TextView) view.findViewById(R.id.text_view_week)).setText(week.getLabel());
-        ((TextView) view.findViewById(R.id.text_view_run)).setText(run);
-        ((TextView) view.findViewById(R.id.text_view_walk)).setText(walk);
+        ((TextView) view.findViewById(R.id.text_view_run)).setText(getRunInfo(week, mContext));
+        ((TextView) view.findViewById(R.id.text_view_walk)).setText(getWalkInfo(week, mContext));
         ((TextView) view.findViewById(R.id.text_view_sets)).setText(sets);
 
         return view;

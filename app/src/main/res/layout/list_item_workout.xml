@@ -24,17 +24,11 @@
                 android:layout_width="@dimen/workout_status_icon_size"
                 android:layout_height="@dimen/workout_status_icon_size"
                 android:contentDescription="@string/status_finished" />
-
-            <TextView
-                android:id="@+id/text_view_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/workout_label_size" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/workout_item_layout_height"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/workout_item_margin"
             android:orientation="vertical">
 
@@ -76,11 +70,31 @@
                     android:textSize="@dimen/workout_text_size"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status"
+                    android:textSize="@dimen/workout_label_size" />
+
+
+                <TextView
+                    android:id="@+id/text_view_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/workout_text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/workout_item_layout_height"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/workout_item_margin"
             android:orientation="vertical">
 
@@ -114,7 +128,26 @@
                         android:textSize="@dimen/workout_label_size" />
 
                     <TextView
-                        android:id="@+id/text_view_time"
+                        android:id="@+id/text_view_time_workout_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/workout_text_size"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/distance"
+                        android:textSize="@dimen/workout_label_size" />
+
+                    <TextView
+                        android:id="@+id/text_view_distance_workout_item"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/workout_text_size"

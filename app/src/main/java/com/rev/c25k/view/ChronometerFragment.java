@@ -26,13 +26,17 @@ import com.rev.c25k.model.Workout;
 import com.rev.c25k.model.WorkoutDAO;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Calendar;
 
 import static androidx.navigation.fragment.NavHostFragment.findNavController;
-import static com.rev.c25k.view.Utils.formatTimeText;
+import static com.rev.c25k.model.Settings.DEFAULT_WARM_UP_SPEED;
+import static com.rev.c25k.model.Settings.DISTANCE_UNIT;
+import static com.rev.c25k.view.Utils.getRunInfo;
+import static com.rev.c25k.view.Utils.getWalkInfo;
 import static java.lang.String.format;
 
 public class ChronometerFragment extends Fragment {
@@ -48,10 +52,15 @@ public class ChronometerFragment extends Fragment {
     private Button mStartButton;
     private Button mCancelButton;
     private Button mBackButton;
+    private TextView mTvTimeFinal;
     private TextView mTvTime;
-    private TextView mTvSets;
+    private TextView mTvDistanceFinal;
+    private TextView mTvDistance;
     private Instant startTime;
+    private Instant lastInstant;
     private Status mStatus;
+    private float mDistance;
+    private String mTime = "00:00";
 
     @Override
     public View onCreateView(
@@ -97,12 +106,8 @@ public class ChronometerFragment extends Fragment {
         ((TextView) view.findViewById(R.id.text_view_week)).setText(mWeek.getLabel());
 
         Context context = requireContext();
-        String runInfo = String.format("%s %s", context.getString(R.string.run),
-                formatTimeText(mWeek.getSecondsToRun(), context));
-        String walkInfo = String.format("%s %s", context.getString(R.string.walk),
-                formatTimeText(mWeek.getSecondsToWalk(), context));
-        String weekInfo = String.format("%s %s", runInfo, walkInfo);
-        ((TextView) view.findViewById(R.id.text_view_week_info)).setText(weekInfo);
+        String info = String.format("%s %s", getRunInfo(mWeek, context), getWalkInfo(mWeek, context));
+        ((TextView) view.findViewById(R.id.text_view_week_info)).setText(info);
     }
 
     private void initStartButton(View view) {
@@ -126,16 +131,58 @@ public class ChronometerFragment extends Fragment {
     }
 
     private void initChronometer(View view) {
+        mTvTimeFinal = view.findViewById(R.id.text_view_time_final);
+        mTvTimeFinal.setVisibility(View.GONE);
         mTvTime = view.findViewById(R.id.text_view_time);
-        mTvTime.setVisibility(View.GONE);
+        mTvTime.setText(mountTimeText());
+        mTvDistanceFinal = view.findViewById(R.id.text_view_distance_final);
+        mTvDistanceFinal.setVisibility(View.GONE);
+        mTvDistance = view.findViewById(R.id.text_view_distance);
+        mTvDistance.setText(mountDistanceText());
         mChronometer = view.findViewById(R.id.chronometer);
         mChronometer.setOnChronometerTickListener(chronometer -> {
-            long elapsed = SystemClock.elapsedRealtime() - chronometer.getBase();
-            if (elapsed > 0) {
+            long elapsedInAction = SystemClock.elapsedRealtime() - chronometer.getBase();
+            Instant now = Instant.now();
+
+            if (lastInstant != null) {
+                updateDistance(now);
+                updateTime(now);
+            }
+
+            lastInstant = now;
+
+
+            if (elapsedInAction > 0) {
                 chronometer.stop();
                 handleActionFinished(chronometer);
             }
         });
+    }
+
+    private void updateDistance(Instant now) {
+        float elapsedSecondsPerTick = Duration.between(lastInstant, now).toMillis() / 1000F;
+        float elapsedHourPerTick = elapsedSecondsPerTick / 60 / 60;
+        float distancePerTick = getSpeedByAction() * elapsedHourPerTick;
+        mDistance += distancePerTick;
+        mTvDistance.setText(mountDistanceText());
+    }
+
+    private void updateTime(Instant now) {
+        long elapsedSinceStart = Duration.between(startTime, now).toMillis();
+        @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("mm:ss");
+        mTime = df.format(elapsedSinceStart);
+        mTvTime.setText(mountTimeText());
+    }
+
+    private float getSpeedByAction() {
+        switch (mCurrentAction) {
+            case ACTION_WARM_UP:
+                return DEFAULT_WARM_UP_SPEED;
+            case ACTION_WALK:
+                return mWeek.getWalkSpeed();
+            default:
+                return mWeek.getRunSpeed();
+        }
     }
 
     private void handleActionFinished(Chronometer chronometer) {
@@ -158,11 +205,11 @@ public class ChronometerFragment extends Fragment {
     }
 
     private void updateChronometer(Chronometer chronometer) {
-        mTvSets = requireView().findViewById(R.id.text_view_sets);
+        TextView mTvSets = requireView().findViewById(R.id.text_view_sets);
         mTvSets.setText(format("%s %s/%s", getString(R.string.current_sets), mCurrentSet, mWeek.getSets()));
         chronometer.setBase(SystemClock.elapsedRealtime() + getBase());
         chronometer.start();
-        updateAction(getActionRes(), true);
+        updateAction(getActionText(), true);
     }
 
     private long getBase() {
@@ -177,7 +224,7 @@ public class ChronometerFragment extends Fragment {
         }
     }
 
-    private void updateAction(int action, boolean blink) {
+    private void updateAction(String action, boolean blink) {
         TextView textViewAction = requireView().findViewById(R.id.text_view_action);
         textViewAction.setText(action);
         if (blink) {
@@ -187,14 +234,17 @@ public class ChronometerFragment extends Fragment {
         }
     }
 
-    private int getActionRes() {
+    private String getActionText() {
         switch (mCurrentAction) {
             case ACTION_WARM_UP:
-                return R.string.warm_up;
+                return String.format("%s (%s%s)", getString(R.string.warm_up),
+                        DEFAULT_WARM_UP_SPEED, DISTANCE_UNIT);
             case ACTION_WALK:
-                return R.string.walk;
+                return String.format("%s (%s%s)", getString(R.string.walk), mWeek.getWalkSpeed(),
+                        DISTANCE_UNIT);
             default:
-                return R.string.run;
+                return String.format("%s (%s%s)", getString(R.string.run), mWeek.getRunSpeed(),
+                        DISTANCE_UNIT);
         }
     }
 
@@ -219,36 +269,51 @@ public class ChronometerFragment extends Fragment {
         mStatus = finished ? Status.FINISHED : Status.CANCELLED;
         int status = mStatus.equals(Status.FINISHED) ? R.string.status_finished
                 : R.string.status_cancelled;
-        updateAction(status, false);
+        updateAction(getString(status), false);
         handleResult();
         showOnlyBackButton();
     }
 
     @SuppressLint("SimpleDateFormat")
     private void handleResult() {
-        Instant finish = Instant.now();
-        long elapsed = Duration.between(startTime, finish).toMillis();
-        DateFormat df = new SimpleDateFormat("mm:ss");
-        String time = df.format(elapsed);
-        showResult(time);
-        saveResult(time);
+        showResult();
+        saveResult();
     }
 
     @SuppressLint("SimpleDateFormat")
-    private void saveResult(String time) {
+    private void saveResult() {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Calendar cal = Calendar.getInstance();
         String date = df.format(cal.getTime());
         String sets = format("%s/%s", mCurrentSet, mWeek.getSets());
         Workout workout = new Workout(null, Training.T5K, date, mWeek,
-                sets, mStatus, time);
+                sets, mStatus, mTime, formatDistance());
         new WorkoutDAO(requireContext()).save(workout);
     }
 
-    private void showResult(String time) {
+    private void showResult() {
         mChronometer.setVisibility(View.GONE);
-        mTvTime.setVisibility(View.VISIBLE);
-        mTvTime.setText(String.format("%s: %s", getString(R.string.time), time));
+        mTvTime.setVisibility(View.GONE);
+        mTvDistance.setVisibility(View.GONE);
+        mTvTimeFinal.setText(mountTimeText());
+        mTvDistanceFinal.setText(mountDistanceText());
+        mTvTimeFinal.setVisibility(View.VISIBLE);
+        mTvDistanceFinal.setVisibility(View.VISIBLE);
+    }
+
+    private String mountDistanceText() {
+        String distance = formatDistance();
+        return String.format("%s: %s%s", getString(R.string.distance), distance, DISTANCE_UNIT);
+    }
+
+    private String formatDistance() {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        return df.format(mDistance);
+    }
+
+    private String mountTimeText() {
+        return String.format("%s: %s", getString(R.string.time), mTime);
     }
 
     private void cancel() {

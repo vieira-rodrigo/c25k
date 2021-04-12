@@ -10,6 +10,7 @@ public class Workout {
     public static final String COLUMN_NAME_SETS = "TX_SETS";
     public static final String COLUMN_NAME_STATUS = "TX_STATUS";
     public static final String COLUMN_NAME_TIME = "TX_TIME";
+    public static final String COLUMN_NAME_DISTANCE = "TX_DISTANCE";
 
     private Long id;
     private Training training;
@@ -18,9 +19,10 @@ public class Workout {
     private String sets;
     private Status status;
     private String time;
+    private String distance;
 
     public Workout(Long id, Training training, String date, T5KWeeks week, String sets,
-                   Status status, String time) {
+                   Status status, String time, String distance) {
         this.id = id;
         this.training = training;
         this.date = date;
@@ -28,6 +30,7 @@ public class Workout {
         this.sets = sets;
         this.status = status;
         this.time = time;
+        this.distance = distance;
     }
 
     public Training getTraining() {
@@ -84,5 +87,13 @@ public class Workout {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 }

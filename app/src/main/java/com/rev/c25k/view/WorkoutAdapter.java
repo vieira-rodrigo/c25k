@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.rev.c25k.R;
+import com.rev.c25k.model.Settings;
 import com.rev.c25k.model.Status;
 import com.rev.c25k.model.Workout;
 import com.rev.c25k.model.WorkoutDAO;
@@ -56,6 +57,7 @@ public class WorkoutAdapter extends BaseAdapter {
         loadTraining(view, workout);
         loadSets(view, workout.getSets());
         loadTime(view, workout.getTime());
+        loadDistance(view, workout.getDistance());
         configDelete(view, workout);
     }
 
@@ -94,7 +96,7 @@ public class WorkoutAdapter extends BaseAdapter {
 
     private void loadTraining(View view, Workout workout) {
         String text = String.format("%s-%s", workout.getTraining().getLabel(),
-                workout.getWeek().getLabel(), workout.getTime());
+                workout.getWeek().getLabel());
         ((TextView) view.findViewById(R.id.text_view_training)).setText(text);
     }
 
@@ -103,6 +105,11 @@ public class WorkoutAdapter extends BaseAdapter {
     }
 
     private void loadTime(View view, String time) {
-        ((TextView) view.findViewById(R.id.text_view_time)).setText(time);
+        ((TextView) view.findViewById(R.id.text_view_time_workout_item)).setText(time);
+    }
+
+    private void loadDistance(View view, String distance) {
+        distance = String.format("%s%s", distance, Settings.DISTANCE_UNIT);
+        ((TextView) view.findViewById(R.id.text_view_distance_workout_item)).setText(distance);
     }
 }

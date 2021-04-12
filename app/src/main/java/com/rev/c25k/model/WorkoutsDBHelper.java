@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class WorkoutsDBHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "Workouts.db";
 
     private static final String SQL_CREATE_ENTRIES =
@@ -16,7 +16,8 @@ public class WorkoutsDBHelper extends SQLiteOpenHelper {
                     Workout.COLUMN_NAME_WEEK + " TEXT," +
                     Workout.COLUMN_NAME_SETS + " TEXT," +
                     Workout.COLUMN_NAME_STATUS + " TEXT," +
-                    Workout.COLUMN_NAME_TIME + " TEXT)";
+                    Workout.COLUMN_NAME_TIME + " TEXT," +
+                    Workout.COLUMN_NAME_DISTANCE + " TEXT)";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + Workout.TABLE_NAME;
