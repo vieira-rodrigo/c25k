@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_HomeFragment_to_SelectFragment"
             app:destination="@id/SelectFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_SettingsFragment"
+            app:destination="@id/SettingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/SelectFragment"
@@ -33,6 +36,9 @@
         <action
             android:id="@+id/action_Chronometer_to_HomeFragment"
             app:destination="@id/HomeFragment" />
+        <action
+            android:id="@+id/action_ChronometerFragment_to_SelectFragment"
+            app:destination="@id/SelectFragment" />
     </fragment>
     <fragment
         android:id="@+id/SettingsFragment"

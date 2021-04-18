@@ -32,6 +32,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initWorkoutsList(view);
         initNewButton(view);
+        initSettingsButton(view);
     }
 
     private void initWorkoutsList(View view) {
@@ -56,6 +57,13 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.button_new).setOnClickListener(view1 -> {
             NavHostFragment.findNavController(HomeFragment.this)
                     .navigate(R.id.action_HomeFragment_to_SelectFragment);
+        });
+    }
+
+    private void initSettingsButton(View view) {
+        view.findViewById(R.id.button_settings).setOnClickListener(view1 -> {
+            NavHostFragment.findNavController(HomeFragment.this)
+                    .navigate(R.id.action_HomeFragment_to_SettingsFragment);
         });
     }
 }

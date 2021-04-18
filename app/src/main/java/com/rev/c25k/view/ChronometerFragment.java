@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.rev.c25k.R;
-import com.rev.c25k.model.Settings;
 import com.rev.c25k.model.Status;
 import com.rev.c25k.model.T5KWeeks;
 import com.rev.c25k.model.Training;
@@ -35,6 +35,8 @@ import java.util.Calendar;
 import static androidx.navigation.fragment.NavHostFragment.findNavController;
 import static com.rev.c25k.model.Settings.DEFAULT_WARM_UP_SPEED;
 import static com.rev.c25k.model.Settings.DISTANCE_UNIT;
+import static com.rev.c25k.model.Settings.SPEED_UNIT;
+import static com.rev.c25k.model.Settings.getWarmUpTime;
 import static com.rev.c25k.view.Utils.getRunInfo;
 import static com.rev.c25k.view.Utils.getWalkInfo;
 import static java.lang.String.format;
@@ -215,7 +217,7 @@ public class ChronometerFragment extends Fragment {
     private long getBase() {
         switch (mCurrentAction) {
             case ACTION_WARM_UP:
-                int mWarmUpTime = Integer.parseInt(Settings.getWarmUpTime(requireContext()));
+                int mWarmUpTime = Integer.parseInt(getWarmUpTime(requireContext()));
                 return mWarmUpTime * 60 * 1000;
             case ACTION_WALK:
                 return mWeek.getSecondsToWalk() * 1000;
@@ -238,13 +240,13 @@ public class ChronometerFragment extends Fragment {
         switch (mCurrentAction) {
             case ACTION_WARM_UP:
                 return String.format("%s (%s%s)", getString(R.string.warm_up),
-                        DEFAULT_WARM_UP_SPEED, DISTANCE_UNIT);
+                        DEFAULT_WARM_UP_SPEED, SPEED_UNIT);
             case ACTION_WALK:
                 return String.format("%s (%s%s)", getString(R.string.walk), mWeek.getWalkSpeed(),
-                        DISTANCE_UNIT);
+                        SPEED_UNIT);
             default:
                 return String.format("%s (%s%s)", getString(R.string.run), mWeek.getRunSpeed(),
-                        DISTANCE_UNIT);
+                        SPEED_UNIT);
         }
     }
 
@@ -328,7 +330,10 @@ public class ChronometerFragment extends Fragment {
     }
 
     public void onBackPressed() {
-        if (startTime != null && mStatus == null) {
+        if (startTime == null) {
+            NavHostFragment.findNavController(ChronometerFragment.this)
+                    .navigate(R.id.action_ChronometerFragment_to_SelectFragment);
+        } else if (mStatus == null) {
             cancel();
         } else {
             backHome();
