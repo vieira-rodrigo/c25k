@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_SelectFragment_to_ChronometerFragment"
             app:destination="@id/ChronometerFragment" />
+        <action
+            android:id="@+id/action_SelectFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/ChronometerFragment"

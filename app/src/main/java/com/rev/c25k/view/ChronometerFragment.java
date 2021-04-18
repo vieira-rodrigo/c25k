@@ -41,7 +41,7 @@ import static com.rev.c25k.view.Utils.getRunInfo;
 import static com.rev.c25k.view.Utils.getWalkInfo;
 import static java.lang.String.format;
 
-public class ChronometerFragment extends Fragment {
+public class ChronometerFragment extends Fragment implements IFragmenBackPressed {
 
     private final int ACTION_WARM_UP = 1;
     private final int ACTION_WALK = 2;
@@ -188,7 +188,7 @@ public class ChronometerFragment extends Fragment {
             case ACTION_WARM_UP:
             case ACTION_WALK:
                 if (mCurrentSet == mWeek.getSets()) {
-                    finish(true);
+                    finishWorkout(true);
                     return;
                 }
                 mCurrentSet++;
@@ -262,7 +262,7 @@ public class ChronometerFragment extends Fragment {
         showOnlyCancelButton();
     }
 
-    private void finish(boolean finished) {
+    private void finishWorkout(boolean finished) {
         stopChronometers();
         mStatus = finished ? Status.FINISHED : Status.CANCELLED;
         int status = mStatus.equals(Status.FINISHED) ? R.string.status_finished
@@ -324,7 +324,7 @@ public class ChronometerFragment extends Fragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage(R.string.confirm_cancel)
-                .setPositiveButton(R.string.yes, (dialog, which) -> finish(false))
+                .setPositiveButton(R.string.yes, (dialog, which) -> finishWorkout(false))
                 .setNegativeButton(R.string.no, (dialog, which) -> startChronometers())
                 .create()
                 .show();
@@ -340,6 +340,7 @@ public class ChronometerFragment extends Fragment {
         mWorkoutChronometer.start();
     }
 
+    @Override
     public void onBackPressed() {
         if (lastInstant == null) {
             NavHostFragment.findNavController(ChronometerFragment.this)

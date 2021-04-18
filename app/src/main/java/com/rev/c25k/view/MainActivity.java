@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Fragment currentFragment = getCurrentFragment();
-        if (currentFragment instanceof ChronometerFragment) {
-            ((ChronometerFragment) currentFragment).onBackPressed();
+        if (currentFragment instanceof IFragmenBackPressed) {
+            ((IFragmenBackPressed) currentFragment).onBackPressed();
         } else if (currentFragment instanceof HomeFragment) {
             finish();
         } else {

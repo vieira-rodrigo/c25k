@@ -13,7 +13,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.rev.c25k.R;
 
-public class SelectWeekFragment extends Fragment {
+public class SelectWeekFragment extends Fragment implements IFragmenBackPressed {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,5 +37,11 @@ public class SelectWeekFragment extends Fragment {
             NavHostFragment.findNavController(SelectWeekFragment.this)
                     .navigate(R.id.action_SelectFragment_to_ChronometerFragment, bundle);
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        NavHostFragment.findNavController(SelectWeekFragment.this)
+                .navigate(R.id.action_SelectFragment_to_HomeFragment);
     }
 }
