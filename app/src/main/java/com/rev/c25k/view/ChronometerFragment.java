@@ -3,6 +3,8 @@ package com.rev.c25k.view;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -43,6 +45,7 @@ import static java.lang.String.format;
 
 public class ChronometerFragment extends Fragment implements IFragmenBackPressed {
 
+    public static final int TONE_END_ACTION_DURATION = 150;
     private final int ACTION_WARM_UP = 1;
     private final int ACTION_WALK = 2;
     private final int ACTION_RUN = 3;
@@ -59,9 +62,11 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
     private TextView mTvTime;
     private TextView mTvDistanceFinal;
     private TextView mTvDistance;
-    private Instant lastInstant;
+    private Instant mLastInstant;
     private Status mStatus;
     private float mDistance;
+    private ToneGenerator mToneGen;
+    private Instant mLastActionNotification;
 
     @Override
     public View onCreateView(
@@ -73,6 +78,7 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mToneGen = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
         initTextViews(view);
         initChronometers(view);
         initStartButton(view);
@@ -139,18 +145,37 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
             long elapsedInAction = SystemClock.elapsedRealtime() - chronometer.getBase();
             Instant now = Instant.now();
 
-            if (lastInstant != null) {
+            if (mLastInstant != null) {
                 updateDistance(now);
             }
 
-            lastInstant = now;
+            mLastInstant = now;
 
-
-            if (elapsedInAction > 0) {
+            if (elapsedInAction > -6000 && elapsedInAction < 0) {
+                notifyActionEnding();
+            } else if (elapsedInAction > 0) {
                 chronometer.stop();
                 handleActionFinished();
             }
         });
+    }
+
+    private void notifyActionEnding() {
+        Instant now = Instant.now();
+        if (mLastActionNotification == null) {
+            playActionEndingAlert(now);
+            return;
+        }
+
+        long timeSinceLAstNotification = Duration.between(mLastActionNotification, now).toMillis();
+        if (timeSinceLAstNotification > TONE_END_ACTION_DURATION) {
+            playActionEndingAlert(now);
+        }
+    }
+
+    private void playActionEndingAlert(Instant now) {
+        mLastActionNotification = now;
+        mToneGen.startTone(ToneGenerator.TONE_CDMA_ANSWER, TONE_END_ACTION_DURATION);
     }
 
     private void initTextViews(View view) {
@@ -164,7 +189,7 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
     }
 
     private void updateDistance(Instant now) {
-        float elapsedSecondsPerTick = Duration.between(lastInstant, now).toMillis() / 1000F;
+        float elapsedSecondsPerTick = Duration.between(mLastInstant, now).toMillis() / 1000F;
         float elapsedHourPerTick = elapsedSecondsPerTick / 60 / 60;
         float distancePerTick = getSpeedByAction() * elapsedHourPerTick;
         mDistance += distancePerTick;
@@ -199,6 +224,11 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
         }
 
         updateActionChronometer();
+        notifyActionChanged();
+    }
+
+    private void notifyActionChanged() {
+        mToneGen.startTone(ToneGenerator.TONE_CDMA_CONFIRM);
     }
 
     private void updateActionChronometer() {
@@ -257,9 +287,9 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
     }
 
     private void start() {
-        startChronometers();
         updateActionChronometer();
         showOnlyCancelButton();
+        mWorkoutChronometer.start();
     }
 
     private void finishWorkout(boolean finished) {
@@ -342,7 +372,7 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
 
     @Override
     public void onBackPressed() {
-        if (lastInstant == null) {
+        if (mLastInstant == null) {
             NavHostFragment.findNavController(ChronometerFragment.this)
                     .navigate(R.id.action_ChronometerFragment_to_SelectFragment);
         } else if (mStatus == null) {
