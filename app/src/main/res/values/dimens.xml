@@ -28,4 +28,5 @@
     <dimen name="tv_time_size">15sp</dimen>
     <dimen name="layout_floating_margin">10dp</dimen>
     <dimen name="button_new_marginBottom">10dp</dimen>
+    <dimen name="tv_distance_marginStart">10dp</dimen>
 </resources>

@@ -42,7 +42,7 @@
             android:textSize="@dimen/sets_text_size" />
 
         <Chronometer
-            android:id="@+id/chronometer"
+            android:id="@+id/chronometer_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:countDown="true"
@@ -80,14 +80,22 @@
                 android:id="@+id/text_view_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/time"
                 android:layout_marginEnd="@dimen/tv_time_marginEnd"
+                android:textSize="@dimen/tv_time_size" />
+
+            <Chronometer
+                android:id="@+id/chronometer_workout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textSize="@dimen/tv_time_size" />
 
             <TextView
                 android:id="@+id/text_view_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/tv_time_size" />
+                android:textSize="@dimen/tv_time_size"
+                android:layout_marginStart="@dimen/tv_distance_marginStart" />
         </LinearLayout>
 
     </LinearLayout>

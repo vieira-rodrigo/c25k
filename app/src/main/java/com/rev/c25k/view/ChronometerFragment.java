@@ -47,7 +47,8 @@ public class ChronometerFragment extends Fragment {
     private final int ACTION_WALK = 2;
     private final int ACTION_RUN = 3;
 
-    Chronometer mChronometer;
+    private Chronometer mActionChronometer;
+    private Chronometer mWorkoutChronometer;
     private T5KWeeks mWeek;
     private int mCurrentSet;
     private int mCurrentAction = ACTION_WARM_UP;
@@ -58,11 +59,9 @@ public class ChronometerFragment extends Fragment {
     private TextView mTvTime;
     private TextView mTvDistanceFinal;
     private TextView mTvDistance;
-    private Instant startTime;
     private Instant lastInstant;
     private Status mStatus;
     private float mDistance;
-    private String mTime = "00:00";
 
     @Override
     public View onCreateView(
@@ -74,7 +73,8 @@ public class ChronometerFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initChronometer(view);
+        initTextViews(view);
+        initChronometers(view);
         initStartButton(view);
         initCancelButton(view);
         initBackButton(view);
@@ -132,23 +132,15 @@ public class ChronometerFragment extends Fragment {
                 .navigate(R.id.action_Chronometer_to_HomeFragment);
     }
 
-    private void initChronometer(View view) {
-        mTvTimeFinal = view.findViewById(R.id.text_view_time_final);
-        mTvTimeFinal.setVisibility(View.GONE);
-        mTvTime = view.findViewById(R.id.text_view_time);
-        mTvTime.setText(mountTimeText());
-        mTvDistanceFinal = view.findViewById(R.id.text_view_distance_final);
-        mTvDistanceFinal.setVisibility(View.GONE);
-        mTvDistance = view.findViewById(R.id.text_view_distance);
-        mTvDistance.setText(mountDistanceText());
-        mChronometer = view.findViewById(R.id.chronometer);
-        mChronometer.setOnChronometerTickListener(chronometer -> {
+    private void initChronometers(View view) {
+        mWorkoutChronometer = view.findViewById(R.id.chronometer_workout);
+        mActionChronometer = view.findViewById(R.id.chronometer_action);
+        mActionChronometer.setOnChronometerTickListener(chronometer -> {
             long elapsedInAction = SystemClock.elapsedRealtime() - chronometer.getBase();
             Instant now = Instant.now();
 
             if (lastInstant != null) {
                 updateDistance(now);
-                updateTime(now);
             }
 
             lastInstant = now;
@@ -156,9 +148,19 @@ public class ChronometerFragment extends Fragment {
 
             if (elapsedInAction > 0) {
                 chronometer.stop();
-                handleActionFinished(chronometer);
+                handleActionFinished();
             }
         });
+    }
+
+    private void initTextViews(View view) {
+        mTvTimeFinal = view.findViewById(R.id.text_view_time_final);
+        mTvTimeFinal.setVisibility(View.GONE);
+        mTvTime = view.findViewById(R.id.text_view_time);
+        mTvDistanceFinal = view.findViewById(R.id.text_view_distance_final);
+        mTvDistanceFinal.setVisibility(View.GONE);
+        mTvDistance = view.findViewById(R.id.text_view_distance);
+        mTvDistance.setText(mountDistanceText());
     }
 
     private void updateDistance(Instant now) {
@@ -167,13 +169,6 @@ public class ChronometerFragment extends Fragment {
         float distancePerTick = getSpeedByAction() * elapsedHourPerTick;
         mDistance += distancePerTick;
         mTvDistance.setText(mountDistanceText());
-    }
-
-    private void updateTime(Instant now) {
-        long elapsedSinceStart = Duration.between(startTime, now).toMillis();
-        @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("mm:ss");
-        mTime = df.format(elapsedSinceStart);
-        mTvTime.setText(mountTimeText());
     }
 
     private float getSpeedByAction() {
@@ -187,7 +182,7 @@ public class ChronometerFragment extends Fragment {
         }
     }
 
-    private void handleActionFinished(Chronometer chronometer) {
+    private void handleActionFinished() {
 
         switch (mCurrentAction) {
             case ACTION_WARM_UP:
@@ -203,14 +198,14 @@ public class ChronometerFragment extends Fragment {
                 mCurrentAction = ACTION_WALK;
         }
 
-        updateChronometer(chronometer);
+        updateActionChronometer();
     }
 
-    private void updateChronometer(Chronometer chronometer) {
+    private void updateActionChronometer() {
         TextView mTvSets = requireView().findViewById(R.id.text_view_sets);
         mTvSets.setText(format("%s %s/%s", getString(R.string.current_sets), mCurrentSet, mWeek.getSets()));
-        chronometer.setBase(SystemClock.elapsedRealtime() + getBase());
-        chronometer.start();
+        mActionChronometer.setBase(SystemClock.elapsedRealtime() + getBase());
+        mActionChronometer.start();
         updateAction(getActionText(), true);
     }
 
@@ -262,12 +257,13 @@ public class ChronometerFragment extends Fragment {
     }
 
     private void start() {
-        startTime = Instant.now();
-        updateChronometer(mChronometer);
+        startChronometers();
+        updateActionChronometer();
         showOnlyCancelButton();
     }
 
     private void finish(boolean finished) {
+        stopChronometers();
         mStatus = finished ? Status.FINISHED : Status.CANCELLED;
         int status = mStatus.equals(Status.FINISHED) ? R.string.status_finished
                 : R.string.status_cancelled;
@@ -289,13 +285,14 @@ public class ChronometerFragment extends Fragment {
         String date = df.format(cal.getTime());
         String sets = format("%s/%s", mCurrentSet, mWeek.getSets());
         Workout workout = new Workout(null, Training.T5K, date, mWeek,
-                sets, mStatus, mTime, formatDistance());
+                sets, mStatus, getWorkoutTime(), formatDistance());
         new WorkoutDAO(requireContext()).save(workout);
     }
 
     private void showResult() {
-        mChronometer.setVisibility(View.GONE);
+        mActionChronometer.setVisibility(View.GONE);
         mTvTime.setVisibility(View.GONE);
+        mWorkoutChronometer.setVisibility(View.GONE);
         mTvDistance.setVisibility(View.GONE);
         mTvTimeFinal.setText(mountTimeText());
         mTvDistanceFinal.setText(mountDistanceText());
@@ -305,7 +302,7 @@ public class ChronometerFragment extends Fragment {
 
     private String mountDistanceText() {
         String distance = formatDistance();
-        return String.format("%s: %s%s", getString(R.string.distance), distance, DISTANCE_UNIT);
+        return String.format("%s %s%s", getString(R.string.distance), distance, DISTANCE_UNIT);
     }
 
     private String formatDistance() {
@@ -315,22 +312,36 @@ public class ChronometerFragment extends Fragment {
     }
 
     private String mountTimeText() {
-        return String.format("%s: %s", getString(R.string.time), mTime);
+        return String.format("%s: %s", getString(R.string.time), getWorkoutTime());
+    }
+
+    private String getWorkoutTime() {
+        return (String) mWorkoutChronometer.getText();
     }
 
     private void cancel() {
-        mChronometer.stop();
+        stopChronometers();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage(R.string.confirm_cancel)
                 .setPositiveButton(R.string.yes, (dialog, which) -> finish(false))
-                .setNegativeButton(R.string.no, (dialog, which) -> mChronometer.start())
+                .setNegativeButton(R.string.no, (dialog, which) -> startChronometers())
                 .create()
                 .show();
     }
 
+    private void stopChronometers() {
+        mActionChronometer.stop();
+        mWorkoutChronometer.stop();
+    }
+
+    private void startChronometers() {
+        mActionChronometer.start();
+        mWorkoutChronometer.start();
+    }
+
     public void onBackPressed() {
-        if (startTime == null) {
+        if (lastInstant == null) {
             NavHostFragment.findNavController(ChronometerFragment.this)
                     .navigate(R.id.action_ChronometerFragment_to_SelectFragment);
         } else if (mStatus == null) {
