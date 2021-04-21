@@ -67,6 +67,9 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
     private float mDistance;
     private ToneGenerator mToneGen;
     private Instant mLastActionNotification;
+    private boolean mStarted;
+    private long mBaseWorkoutWhenPause;
+    private long mBaseActionWhenPause;
 
     @Override
     public View onCreateView(
@@ -141,23 +144,25 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
     private void initChronometers(View view) {
         mWorkoutChronometer = view.findViewById(R.id.chronometer_workout);
         mActionChronometer = view.findViewById(R.id.chronometer_action);
-        mActionChronometer.setOnChronometerTickListener(chronometer -> {
-            long elapsedInAction = SystemClock.elapsedRealtime() - chronometer.getBase();
-            Instant now = Instant.now();
+        mActionChronometer.setOnChronometerTickListener(
+                chronometer -> new Thread(() -> handleActionChronometerTick(chronometer)).start());
+    }
 
-            if (mLastInstant != null) {
-                updateDistance(now);
-            }
+    private void handleActionChronometerTick(Chronometer chronometer) {
+        long elapsedInAction = SystemClock.elapsedRealtime() - chronometer.getBase();
+        Instant now = Instant.now();
 
-            mLastInstant = now;
+        if (mLastInstant != null) {
+            updateDistance(now);
+        }
 
-            if (elapsedInAction > -6000 && elapsedInAction < 0) {
-                notifyActionEnding();
-            } else if (elapsedInAction > 0) {
-                chronometer.stop();
-                handleActionFinished();
-            }
-        });
+        mLastInstant = now;
+
+        if (elapsedInAction > -6000 && elapsedInAction < 0) {
+            notifyActionEnding();
+        } else if (elapsedInAction > 0) {
+            handleActionFinished();
+        }
     }
 
     private void notifyActionEnding() {
@@ -193,7 +198,7 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
         float elapsedHourPerTick = elapsedSecondsPerTick / 60 / 60;
         float distancePerTick = getSpeedByAction() * elapsedHourPerTick;
         mDistance += distancePerTick;
-        mTvDistance.setText(mountDistanceText());
+        requireActivity().runOnUiThread(() -> mTvDistance.setText(mountDistanceText()));
     }
 
     private float getSpeedByAction() {
@@ -232,17 +237,23 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
     }
 
     private void updateActionChronometer() {
-        TextView mTvSets = requireView().findViewById(R.id.text_view_sets);
-        mTvSets.setText(format("%s %s/%s", getString(R.string.current_sets), mCurrentSet, mWeek.getSets()));
-        mActionChronometer.setBase(SystemClock.elapsedRealtime() + getBase());
-        mActionChronometer.start();
-        updateAction(getActionText(), true);
+        requireActivity().runOnUiThread(() -> {
+            mActionChronometer.setBase(SystemClock.elapsedRealtime() + getBase());
+            mActionChronometer.start();
+            TextView mTvSets = requireView().findViewById(R.id.text_view_sets);
+            mTvSets.setText(format("%s %s/%s", getString(R.string.current_sets), mCurrentSet, mWeek.getSets()));
+            updateAction(getActionText(), true);
+        });
     }
 
     private long getBase() {
         switch (mCurrentAction) {
             case ACTION_WARM_UP:
                 int mWarmUpTime = Integer.parseInt(getWarmUpTime(requireContext()));
+                if (mWarmUpTime == 0) {
+                    mCurrentAction = ACTION_RUN;
+                    return mWeek.getSecondsToRun() * 1000;
+                }
                 return mWarmUpTime * 60 * 1000;
             case ACTION_WALK:
                 return mWeek.getSecondsToWalk() * 1000;
@@ -290,6 +301,7 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
         updateActionChronometer();
         showOnlyCancelButton();
         mWorkoutChronometer.start();
+        mStarted = true;
     }
 
     private void finishWorkout(boolean finished) {
@@ -297,9 +309,11 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
         mStatus = finished ? Status.FINISHED : Status.CANCELLED;
         int status = mStatus.equals(Status.FINISHED) ? R.string.status_finished
                 : R.string.status_cancelled;
-        updateAction(getString(status), false);
-        handleResult();
-        showOnlyBackButton();
+        requireActivity().runOnUiThread(() -> {
+            updateAction(getString(status), false);
+            handleResult();
+            showOnlyBackButton();
+        });
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -350,14 +364,26 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
     }
 
     private void cancel() {
-        stopChronometers();
+        pause();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage(R.string.confirm_cancel)
                 .setPositiveButton(R.string.yes, (dialog, which) -> finishWorkout(false))
-                .setNegativeButton(R.string.no, (dialog, which) -> startChronometers())
+                .setNegativeButton(R.string.no, (dialog, which) -> resume())
                 .create()
                 .show();
+    }
+
+    private void pause() {
+        stopChronometers();
+        mBaseWorkoutWhenPause = SystemClock.elapsedRealtime() - mWorkoutChronometer.getBase();
+        mBaseActionWhenPause = SystemClock.elapsedRealtime() - mActionChronometer.getBase();
+    }
+
+    private void resume() {
+        mWorkoutChronometer.setBase(SystemClock.elapsedRealtime() - mBaseWorkoutWhenPause);
+        mActionChronometer.setBase(SystemClock.elapsedRealtime() - mBaseActionWhenPause);
+        startChronometers();
     }
 
     private void stopChronometers() {
@@ -373,7 +399,7 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
 
     @Override
     public void onBackPressed() {
-        if (mLastInstant == null) {
+        if (!mStarted) {
             NavHostFragment.findNavController(ChronometerFragment.this)
                     .navigate(R.id.action_ChronometerFragment_to_SelectFragment);
         } else if (mStatus == null) {
