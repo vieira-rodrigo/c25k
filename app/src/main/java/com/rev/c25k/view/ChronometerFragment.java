@@ -361,6 +361,7 @@ public class ChronometerFragment extends Fragment implements IFragmenBackPressed
     }
 
     private void stopChronometers() {
+        mLastInstant = null;
         mActionChronometer.stop();
         mWorkoutChronometer.stop();
     }
